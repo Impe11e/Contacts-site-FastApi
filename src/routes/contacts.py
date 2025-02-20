@@ -30,7 +30,7 @@ async def read_contact(contact_id: int, db: Session = Depends(get_db)):
     return contact
 
 
-@router.patch("/{contact_id}", response_model=ContactResponse)
+@router.put("/{contact_id}", response_model=ContactResponse)
 async def update_contact(body: ContactUpdate, contact_id: int, db: Session = Depends(get_db)):
     contact = await repository_contacts.update_contact(contact_id, body, db)
     if contact is None:

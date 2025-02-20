@@ -25,11 +25,11 @@ async def get_contact(contact_id: int, db: Session) -> Contact | None:
 async def update_contact(contact_id: int, body: ContactUpdate, db: Session) -> Contact | None:
     contact = db.query(Contact).filter(Contact.id == contact_id).first()
     if contact:
-        contact.name = body.name
-        contact.surname = body.surname
-        contact.email = body.email
-        contact.phone = body.phone
-        contact.birthday = body.birthday
+        contact.name = (body.name,)
+        contact.surname = (body.surname,)
+        contact.email = (body.email,)
+        contact.phone = (body.phone,)
+        contact.birthday = (body.birthday,)
         contact.description = body.description
 
         db.commit()
