@@ -19,6 +19,11 @@ libgravatar = "^1.0.4"
 python-jose = {extras = ["cryptography"], version = "^3.4.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-multipart = "^0.0.20"
+fastapi-mail = "^1.4.2"
+pydantic-settings = "^2.8.0"
+redis = "^5.2.1"
+fastapi-limiter = "^0.1.6"
+cloudinary = "^1.42.2"
 
 
 [build-system]

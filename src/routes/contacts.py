@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Depends, status, Query
+from fastapi_limiter.depends import RateLimiter
 from sqlalchemy.orm import Session
 
 from src.database.db import get_db
@@ -12,18 +13,18 @@ from src.services.auth import auth_service
 router = APIRouter(prefix='/contacts', tags=["contacts"])
 
 
-@router.get("/", response_model=List[ContactResponse])
+@router.get("/", response_model=List[ContactResponse], description='No more than 10 requests per minute', dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def read_contacts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     contacts = await repository_contacts.read_contacts(skip, limit, current_user, db)
     return contacts
 
 
-@router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED, description='No more than 5 requests per minute', dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def create_contact(body: ContactModel, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     return await repository_contacts.create_contact(body, current_user, db)
 
 
-@router.get("/{contact_id}", response_model=ContactResponse)
+@router.get("/{contact_id}", response_model=ContactResponse, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def read_contact(contact_id: int, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     contact = await repository_contacts.get_contact(contact_id, current_user, db)
     if contact is None:
@@ -31,7 +32,7 @@ async def read_contact(contact_id: int, db: Session = Depends(get_db), current_u
     return contact
 
 
-@router.put("/{contact_id}", response_model=ContactResponse)
+@router.put("/{contact_id}", response_model=ContactResponse, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def update_contact(body: ContactUpdate, contact_id: int, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     contact = await repository_contacts.update_contact(contact_id, body, current_user, db)
     if contact is None:
@@ -46,7 +47,7 @@ async def remove_contact(contact_id: int, db: Session = Depends(get_db), current
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
     return contact
 
-@router.get("/search/", response_model=List[ContactResponse])
+@router.get("/search/", response_model=List[ContactResponse], dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def search_contacts(current_user: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
     name: str = Query(None, description="First name of the contact", max_length=50),
@@ -57,7 +58,7 @@ async def search_contacts(current_user: User = Depends(auth_service.get_current_
         return {"message": "No contacts found"}
     return contacts
 
-@router.get("/birthdays/", response_model=List[ContactResponse])
+@router.get("/birthdays/", response_model=List[ContactResponse], dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def read_birthdays(current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db), days: int = Query(7, ge=1, le=365, description="Number of days ahead to check birthdays")):
     contacts = await repository_contacts.read_birthdays(db, current_user, days)
     if contacts is None:
