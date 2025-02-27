@@ -26,6 +26,10 @@ app.include_router(users.router, prefix='/api')
 
 @app.on_event("startup")
 async def startup():
+    """
+    This function is executed when the application starts.
+    It connects to Redis and initializes the FastAPI Limiter for rate-limiting.
+    """
     r = await redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0, encoding="utf-8",
                           decode_responses=True)
     await FastAPILimiter.init(r)
@@ -33,4 +37,8 @@ async def startup():
 
 @app.get("/")
 def read_root():
+    """
+    A simple root endpoint to test if the API is working correctly.
+    Returns a simple message.
+    """
     return {"message": "Hello World"}

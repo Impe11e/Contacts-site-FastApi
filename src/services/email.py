@@ -23,6 +23,17 @@ conf = ConnectionConfig(
 
 
 async def send_email(email: EmailStr, username: str, host: str):
+    """
+    Sends a confirmation email to the user with a verification token.
+
+    :param email: The email address to which the confirmation email is sent.
+    :type email: EmailStr
+    :param username: The username of the recipient user, included in the email message.
+    :type username: str
+    :param host: The base URL of the host used to generate the confirmation link in the email template.
+    :type host: str
+    :raises ConnectionErrors: If there is an issue connecting to the email service or sending the email.
+    """
     try:
         token_verification = auth_service.create_email_token({"sub": email})
         message = MessageSchema(

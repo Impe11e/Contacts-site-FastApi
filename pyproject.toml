@@ -26,6 +26,9 @@ fastapi-limiter = "^0.1.6"
 cloudinary = "^1.42.2"
 
 
+[tool.poetry.group.dev.dependencies]
+sphinx = "^8.2.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
