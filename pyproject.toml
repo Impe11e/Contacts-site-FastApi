@@ -24,6 +24,8 @@ pydantic-settings = "^2.8.0"
 redis = "^5.2.1"
 fastapi-limiter = "^0.1.6"
 cloudinary = "^1.42.2"
+pytest = "^8.3.4"
+httpx = "^0.28.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -32,3 +34,6 @@ sphinx = "^8.2.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

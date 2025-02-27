@@ -30,10 +30,13 @@ async def startup():
     This function is executed when the application starts.
     It connects to Redis and initializes the FastAPI Limiter for rate-limiting.
     """
-    r = await redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0, encoding="utf-8",
-                          decode_responses=True)
-    await FastAPILimiter.init(r)
-
+    try:
+        r = await redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0, encoding="utf-8",
+                              decode_responses=True)
+        await FastAPILimiter.init(r)
+    except Exception as e:
+        print(f"Error connecting to Redis: {e}")
+        raise e
 
 @app.get("/")
 def read_root():

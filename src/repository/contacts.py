@@ -77,11 +77,11 @@ async def update_contact(contact_id: int, body: ContactUpdate, user: User, db: S
     """
     contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     if contact:
-        contact.name = (body.name,)
-        contact.surname = (body.surname,)
-        contact.email = (body.email,)
-        contact.phone = (body.phone,)
-        contact.birthday = (body.birthday,)
+        contact.name = body.name
+        contact.surname = body.surname
+        contact.email = body.email
+        contact.phone = body.phone
+        contact.birthday = body.birthday
         contact.description = body.description
 
         db.commit()

@@ -11,7 +11,7 @@ class ContactBase(BaseModel):
     phone: PhoneNumber
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ContactModel(ContactBase):
     birthday: Optional[datetime] = Field(None, description="Contact's birthday on... Day-Month-Year")
@@ -44,7 +44,7 @@ class UserDb(BaseModel):
     avatar: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserResponse(BaseModel):
